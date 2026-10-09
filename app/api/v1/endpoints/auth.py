@@ -2,12 +2,18 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Cookie
 from app.schemas.auth import Token, RefreshRequest
-from app.core.auth import create_access_token, create_refresh_token, decode_token
+from app.core.auth import (
+    create_access_token,
+    create_refresh_token,
+    decode_token,
+    get_current_user,
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from app.core.unit_of_work import get_uow
 from app.interfaces.unit_of_work import IUnitOfWork
 from app.core.config import settings
 from jose import JWTError
+from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="")
 
@@ -67,6 +73,12 @@ def refresh_access_token(refresh_token: Optional[str] = Cookie(None)) -> dict:
         "access_token": new_access_token,
         "token_type": "bearer"
     }
+
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: UserResponse = Depends(get_current_user)) -> UserResponse:
+    return current_user
+
 
 @router.post("/logout")
 def logout(response: Response) -> dict:

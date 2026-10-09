@@ -1,10 +1,16 @@
-import pytest
-from fastapi.testclient import TestClient
+import os
 from unittest.mock import MagicMock
 
-from app.main import app
-from app.interfaces.unit_of_work import IUnitOfWork
+import pytest
+from fastapi.testclient import TestClient
+
+# Tests must provide their own signing key because production configuration requires one.
+os.environ.setdefault("SECRET_KEY", "test-secret-key-that-is-at-least-32-characters-long")
+
 from app.core.unit_of_work import get_uow
+from app.interfaces.unit_of_work import IUnitOfWork
+from app.main import app
+
 
 @pytest.fixture
 def mock_uow():

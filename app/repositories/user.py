@@ -21,7 +21,8 @@ class UserRepository(IUserRepository):
 
         new_user = User(
             email = user_data.email,
-            password = hashed_password
+            password = hashed_password,
+            is_admin=False,
         )
 
         self.db.add(new_user)
