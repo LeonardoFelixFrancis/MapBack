@@ -17,3 +17,4 @@ python-multipart==0.0.32
 
 ruff==0.16.9
 flake8==7.4.1
+psycopg2-binary==2.9.13
